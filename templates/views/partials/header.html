@@ -1,11 +1,22 @@
-<link rel="stylesheet" href="static/styles/theme_toggle.css">
+<link rel="stylesheet" href="/static/styles/theme_toggle.css">
 
 <nav class="navbar shadow-sm fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="/">
       <img src="/static/images/favicon-32x32.png" alt="af1" width="30" height="24" class="d-inline-block align-text-top">
       AnimeFinder
     </a>
+
+      <!-- Anime search function -->
+<div class="justify-content-center">
+    <!--Need to query..-->
+    <div class="container-1">
+    <form class="form-inline" action="/db" method="GET">
+        <input type="text" name="search" placeholder="Search">
+        <input type="submit" value="Search" class="btn btn-primary">
+    </form>
+    </div>
+</div>
 
 
     <!-- My dark and light theme toggle -->

@@ -17,16 +17,19 @@
   </head>
   <body>
     {% include 'views/partials/header.html' %}
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alert alert-danger centered">{{msg}}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <div class="container">
-      <h1 class="text-center mt-2 mb-4">
-        {{company_name}}
-      </h1>
-
-
       <h2 class="text-center mt-2 mb-4">Popular Animes</h2>
-      <div>
-        {% for anime in anime %}
-          {% include 'views/animeitem.html' %}
+      <div class="row">
+        {% for anime in animes %}
+          {% include 'views/item.html' %}
         {% endfor %}
       </div>
     </div>

@@ -1,0 +1,11 @@
+<div class="col-3">
+    <p
+      style="color:rgb(120,120,120); margin-bottom:4px;">
+      {{anime['name']}}
+    </p>
+    {% if 'image' in anime %}
+    <div>
+      <a href="/anime/{{anime['anime_id']}}"><img src="{{anime['image']}}" alt="{{anime['anime_id']}}" width="300" height="200"></a>
+    </div>
+    {% endif %}
+</div>
