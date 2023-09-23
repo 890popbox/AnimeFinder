@@ -1,0 +1,50 @@
+<footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="/" class="nav-link px-2">Home</a></li>
+      <li class="nav-item"><a href="mailto:890popbox@gmail.com" class="nav-link px-2">Contact</a></li>
+      <li class="nav-item"><a href="/about" class="nav-link px-2">About</a></li>
+    </ul>
+    <div>
+    <p class="text-center">&copy; 2023 AnimeFinder, Inc</p>
+    </div>
+  </footer>
+
+<script>
+//Find what page we are on and hightlight it..
+var pathname = window.location.pathname;
+var findCurrentNav = document.querySelector('a[href="'+pathname+'"]');
+if(findCurrentNav){findCurrentNav.classList.add('active');}
+
+//Add dark theme event handlers..
+const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+function switchTheme(e) {
+    if (e.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+    else {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+}
+
+/*Store the user preference for future visits */
+toggleSwitch.addEventListener('change', switchTheme, false);
+function switchTheme(e) {
+    if (e.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark'); //add this
+    }
+    else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light'); //add this
+    }
+}
+/*Check for saved user preference, if any, on load of the website */
+const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    if (currentTheme === 'dark') {
+        toggleSwitch.checked = true;
+    }
+}
+</script>
