@@ -108,5 +108,7 @@ def about_af():
     return render_template('views/about.html',
                            company_name='AnimeFinder')
 
+'''
 if __name__ == "__main__":
   app.run(host='127.0.0.1', debug=True)
+'''
