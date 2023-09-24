@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, flash, redirect, url_for
 from database import load_animes_from_db
 
 app = Flask(__name__)
+app.secret_key = 'the random string'
 
 # Run it once and store all data globally so the application can use it
 ANIMELIST = load_animes_from_db()
@@ -41,5 +42,4 @@ def anime_view(id):
 
 
 if __name__ == "__main__":
-    app.secret_key = 'the random string'
     app.run(host='127.0.0.1', debug=True)
