@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, flash, redirect, url_for
-from database import load_animes_from_db, load_flask_key
+from database import load_animes_from_db, load_flask_key, load_anime_from_db
 
 app = Flask(__name__)
 app.secret_key = load_flask_key()
@@ -33,7 +33,8 @@ def anime_view(id):
     # Searching directly for Anime by the Database ID to avoid too much reads.
     # Also checking for out of bounds, negative does not matter it just scans the database backwards anyway.
     if int(id) < len(ANIMELIST):
-        item = ANIMELIST[int(id) - 1]
+        item = load_anime_from_db(int(id))
+        print(item)
         return render_template('views/anime.html',
                                anime=item,
                                company_name='AnimeFinder')

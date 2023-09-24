@@ -21,7 +21,7 @@
 
     <div class="container">
       <h1 class="text-center mt-2 mb-4">
-        {{anime['name']}}
+        {{anime['a_name']}}
       </h1>
       <h2>{{anime['english_name']}} {{anime['other_name']}}</h2>
 
@@ -37,7 +37,7 @@
       <img src="{{anime['image']}}" alt="{{anime['id']}}" width="400" height="300">
     </div>
     {% endif %}
-<p>If you like {{anime['name']}} you may like these Animes</p>
+<p>If you like {{anime['a_name']}} you may like these Animes</p>
 
     <div>
         {% for anime in recommended %}
