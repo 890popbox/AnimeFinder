@@ -2,6 +2,7 @@ blinker==1.6.2
 click==8.1.7
 colorama==0.4.6
 flask==2.3.3
+greenlet==2.0.2
 gunicorn==21.2.0
 importlib-metadata==6.8.0
 itsdangerous==2.1.2
@@ -15,6 +16,8 @@ python-dateutil==2.8.2
 python-dotenv==1.0.0
 pytz==2023.3.post1
 six==1.16.0
+SQLAlchemy==2.0.21
+typing-extensions==4.8.0
 tzdata==2023.3
 werkzeug==2.3.7
 zipp==3.17.0
