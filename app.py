@@ -30,7 +30,7 @@ def all_anime():
 @app.route("/anime/<id>")
 def anime_view(id):
     for i in range(1, len(ANIMELIST)):
-        if (ANIMELIST[i]['anime_id'] == int(id)):
+        if ANIMELIST[i]['anime_id'] == int(id):
             return render_template('views/anime.html',
                                    anime=ANIMELIST[i],
                                    company_name='AnimeFinder')
