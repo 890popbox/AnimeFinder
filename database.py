@@ -21,12 +21,6 @@ engine = create_engine(os.getenv('db_key'),
                                "ssl_ca": "/etc/ssl/cert.pem"
                            }
                        })
-# Experimenting with the data table I made in MySQL Workbench
-with engine.connect() as conn:
-    result = conn.execute(text("select * from animes"))
-    describe = conn.execute(text("describe animes"))
-    print(result.all())
-    print(describe.all())
 
 
 # Function to load all anime from the database.
