@@ -31,8 +31,9 @@ def all_anime():
 @app.route("/anime/<id>")
 def anime_view(id):
     # Searching directly for Anime by the Database ID to avoid too much reads.
-    item = ANIMELIST[int(id)-1]
-    if item:
+    # Also checking for out of bounds, negative does not matter it just scans the database backwards anyway.
+    if int(id) < len(ANIMELIST):
+        item = ANIMELIST[int(id) - 1]
         return render_template('views/anime.html',
                                anime=item,
                                company_name='AnimeFinder')
