@@ -1,2 +1,2 @@
 # AnimeFinder
-A project website to demostrate application development, database management and machine learning algorithms.
+A project website to demonstrate application development, database management and machine learning algorithms.
