@@ -11,7 +11,7 @@ ANIMELIST = load_animes_from_db()
 @app.route("/")
 def anime_finder_home():
     return render_template('views/home.html',
-                           animes=ANIMELIST[1:13],
+                           animes=ANIMELIST[0:12],
                            company_name='AnimeFinder')
 
 
@@ -30,12 +30,12 @@ def all_anime():
 
 @app.route("/anime/<id>")
 def anime_view(id):
-    # The idea behind this is some because some animes are missing you'll find it before you reach this number
-    for i in range(1, int(id) + 1):
-        if ANIMELIST[i]['anime_id'] == int(id):
-            return render_template('views/anime.html',
-                                   anime=ANIMELIST[i],
-                                   company_name='AnimeFinder')
+    # Searching directly for Anime by the Database ID to avoid too much reads.
+    item = ANIMELIST[int(id)-1]
+    if item:
+        return render_template('views/anime.html',
+                               anime=item,
+                               company_name='AnimeFinder')
     else:
         flash('Sorry, that id does not match an anime. Try searching for one above!')
         return redirect(url_for('anime_finder_home'))

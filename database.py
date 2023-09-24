@@ -1,4 +1,5 @@
-from sqlalchemy import create_engine, text, Integer, Column, String
+from sqlalchemy import create_engine, text
+# Integer, Column, String
 # from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
 import os
@@ -48,6 +49,7 @@ Base = declarative_base()
 '''
 class Anime(Base):
     __tablename__ = 'animes'
+    id = Column(Integer, primary_key=True, autoincrement=True)
     anime_id = Column(Integer, primary_key=True)
     a_name = Column(String(150))
     english_name = Column(String(150))
@@ -79,7 +81,7 @@ class Anime(Base):
 # Creating a list to hold all the anime entries
 ANIMEDUMMYLIST = []
 
-with open("static/anime-dataset-2023.csv", encoding="utf8") as csv_file:
+with open("anime-dataset-2023.csv", encoding="utf8") as csv_file:
     Anime_Data = csv.reader(csv_file, delimiter=",")
     Anime_Data = list(Anime_Data)
 '''
@@ -89,6 +91,7 @@ with open("static/anime-dataset-2023.csv", encoding="utf8") as csv_file:
 
 '''
 for data in Anime_Data[1:-1]:
+    print(data)
     item = Anime(anime_id=int(data[0]),
                  a_name=data[1],
                  english_name=data[2],
