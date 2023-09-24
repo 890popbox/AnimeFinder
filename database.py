@@ -33,6 +33,11 @@ def load_animes_from_db():
         return ANIME_DB
 
 
+# Function to load our secret flask_key
+def load_flask_key():
+    return os.getenv('flask_key')
+
+
 # Create a session to the engine, and a base class to use
 '''
 Session = sessionmaker(engine)

@@ -1,8 +1,8 @@
 from flask import Flask, render_template, jsonify, flash, redirect, url_for
-from database import load_animes_from_db
+from database import load_animes_from_db, load_flask_key
 
 app = Flask(__name__)
-app.secret_key = 'the random string'
+app.secret_key = load_flask_key()
 
 # Run it once and store all data globally so the application can use it
 ANIMELIST = load_animes_from_db()
