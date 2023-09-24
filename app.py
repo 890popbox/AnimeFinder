@@ -29,7 +29,8 @@ def all_anime():
 
 @app.route("/anime/<id>")
 def anime_view(id):
-    for i in range(1, len(ANIMELIST)):
+    # The idea behind this is some because some animes are missing you'll find it before you reach this number
+    for i in range(1, int(id) + 1):
         if ANIMELIST[i]['anime_id'] == int(id):
             return render_template('views/anime.html',
                                    anime=ANIMELIST[i],
