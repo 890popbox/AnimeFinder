@@ -4,7 +4,7 @@ anime_model = {
     'english_name': "The english name",
     'other_name': "Native name or title of the anime(can be in Japanese, Chinese or Korean)",
     'score': 8,
-    'genres': "Genres",
+    'genre': "Genre",
     'synopsis': "A brief description or summary of the anime's plot",
     'type': "The type of the anime (e.g., TV series, movie, OVA, etc.)",
     'episodes': "The number of episodes in the anime",
