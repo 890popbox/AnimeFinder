@@ -26,13 +26,14 @@
       {% endif %}
     {% endwith %}
     <div class="container">
-      <h2 class="text-center mt-2 mb-4">All Anime in our Database</h2>
+      <h2 class="text-center mt-2 mb-4">You searched for {{searched}}</h2>
       <div class="row">
         {% for anime in animes %}
           {% include 'views/item.html' %}
         {% endfor %}
       </div>
     </div>
+
     {% include 'views/partials/footer.html' %}
   </body>
 </html>

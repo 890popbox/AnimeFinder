@@ -1,29 +1,37 @@
-anime_model = {
-    'anime_id': 0,
-    'name': "Name of anime",
-    'english_name': "The english name",
-    'other_name': "Native name or title of the anime(can be in Japanese, Chinese or Korean)",
-    'score': 8,
-    'genre': "Genre",
-    'synopsis': "A brief description or summary of the anime's plot",
-    'type': "The type of the anime (e.g., TV series, movie, OVA, etc.)",
-    'episodes': "The number of episodes in the anime",
-    'aired': "The dates when the anime was aired",
-    'premiered': "The season and year when the anime premiered",
-    'status': "The status of the anime (e.g., Finished Airing, Currently Airing, etc.)",
-    'producers': "The production companies or producers of the anime",
-    'licensors': "The licensors of the anime (e.g., streaming platforms)",
-    'studios': "The animation studios that worked on the anime",
-    'source': "The source material of the anime (e.g., manga, light novel, original)",
-    'duration': "The duration of each episode",
-    'rating': "The age rating of the anime",
-    'rank': "The rank of the anime based on popularity or other criteria",
-    'popularity': "The popularity rank of the anime",
-    'favorites': "How many times people favourited the anime",
-    'scored_by': "How many people rated it",
-    'members': "People that watched it",
-    'image': "Link to image"
-}
+# This class belongs to the table animes, including all the columns we need here
+from sqlalchemy import Column, String, Integer
+from sqlalchemy.orm import declarative_base
+Base = declarative_base()
+
+
+class Animes(Base):
+    __tablename__ = 'animes'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    anime_id = Column(Integer, primary_key=True)
+    a_name = Column(String(150))
+    english_name = Column(String(150))
+    other_name = Column(String(150))
+    score = Column(String(15))
+    genre = Column(String(150))
+    synopsis = Column(String(5000))
+    a_type = Column(String(15))
+    episodes = Column(String(15))
+    aired = Column(String(45))
+    premiered = Column(String(30))
+    anime_status = Column(String(30))
+    producers = Column(String(500))
+    licensors = Column(String(100))
+    studios = Column(String(150))
+    a_source = Column(String(30))
+    duration = Column(String(30))
+    rating = Column(String(30))
+    a_rank = Column(String(15))
+    popularity = Column(Integer)
+    favorites = Column(Integer)
+    scored_by = Column(String(15))
+    members = Column(Integer)
+    image = Column(String(100))
+
 
 # Description of each item below and names adjusted above to fit a database.
 '''

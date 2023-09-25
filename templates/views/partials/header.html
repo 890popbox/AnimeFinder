@@ -11,8 +11,9 @@
 <div class="justify-content-center">
     <!--Need to query..-->
     <div class="container-1">
-    <form class="form-inline" action="/db" method="GET">
-        <input type="text" name="search" placeholder="Search">
+    <form method ="POST" action="{{url_for('anime_search')}}" class="form-inline">
+        {{ form.hidden_tag() }}
+        <input type="text" name="searched" placeholder="Search">
         <input type="submit" value="Search" class="btn btn-primary">
     </form>
     </div>

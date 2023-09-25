@@ -1,4 +1,8 @@
 from sqlalchemy import create_engine, text
+from flask_wtf import FlaskForm
+from sqlalchemy.orm import sessionmaker
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 # Integer, Column, String
 # from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
@@ -8,6 +12,9 @@ import os
 # Reading the key from an environment file, could do this to a text file as well and not include it in repo.
 
 # Function to configure the project potentially
+from templates.models.anime import Animes
+
+
 def configure():
     load_dotenv()
 
@@ -27,14 +34,15 @@ engine = create_engine(os.getenv('db_key'),
 # Function to load all anime from the database.
 def load_animes_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("select * from animes"))
+        result = conn.execute(text("select * from animes")
+                              )
         ANIME_DB = []
         for row in result.all():
             ANIME_DB.append(row._asdict())
         return ANIME_DB
 
 
-# Function to load a specific anime from the database.
+# Function to load a specific anime from the database using its ID.
 def load_anime_from_db(id):
     with engine.connect() as conn:
         result = conn.execute(
@@ -52,42 +60,29 @@ def load_flask_key():
     return os.getenv('flask_key')
 
 
+# Class to search for an anime from the database via query.
+class SearchAnime(FlaskForm):
+    searched = StringField("searched", validators=[DataRequired()])
+    submit = SubmitField("submit")
+
+
+# Function to load anime searched for
+def search_anime_from_db(search):
+    with engine.connect() as conn:
+        result = conn.execute(
+            text(f"select * from animes where id = {id}")
+        )
+
+
 # Create a session to the engine, and a base class to use
-'''
 Session = sessionmaker(engine)
-Base = declarative_base()
-'''
+# Base = declarative_base()
+
 
 # This class belongs to the table animes, including all the columns we need here
-'''
-class Anime(Base):
-    __tablename__ = 'animes'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    anime_id = Column(Integer, primary_key=True)
-    a_name = Column(String(150))
-    english_name = Column(String(150))
-    other_name = Column(String(150))
-    score = Column(String(15))
-    genre = Column(String(150))
-    synopsis = Column(String(5000))
-    a_type = Column(String(15))
-    episodes = Column(String(15))
-    aired = Column(String(45))
-    premiered = Column(String(30))
-    anime_status = Column(String(30))
-    producers = Column(String(500))
-    licensors = Column(String(100))
-    studios = Column(String(150))
-    a_source = Column(String(30))
-    duration = Column(String(30))
-    rating = Column(String(30))
-    a_rank = Column(String(15))
-    popularity = Column(Integer)
-    favorites = Column(Integer)
-    scored_by = Column(String(15))
-    members = Column(Integer)
-    image = Column(String(100))
-'''
+# This is in the template/models folder.
+# Anime = Animes
+
 
 # Reading data from a csv file, this contains about 25,000 different animes
 '''
