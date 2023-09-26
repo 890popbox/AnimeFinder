@@ -21,28 +21,26 @@
 
     <div class="container">
       <h1 class="text-center mt-2 mb-4">
-        {{anime['a_name']}}
+        {{anime.a_name}}
       </h1>
-      <h2>{{anime['english_name']}} {{anime['other_name']}}</h2>
+      <h2>{{anime.english_name}} {{anime.other_name}}</h2>
 
     <div class="col-10">
     <div>
-      <b>Description:</b><p>{{anime['synopsis']}}</p>
-      <b>Genre:</b><p>{{anime['genre']}}</p>
-      <b>Type:</b><p>{{anime['a_type']}}</p>
-      <b>Score:</b><p>{{anime['score']}}</p>
+      <b>Description:</b><p>{{anime.synopsis}}</p>
+      <b>Genre:</b><p>{{anime.genre}}</p>
+      <b>Type:</b><p>{{anime.a_type}}</p>
+      <b>Score:</b><p>{{anime.score}}</p>
     </div>
-    {% if 'image' in anime %}
+    {% if anime.image %}
     <div class = "border-bottom">
-      <img src="{{anime['image']}}" alt="{{anime['id']}}" width="400" height="300">
+      <img src="{{anime.image}}" alt="{{anime.id}}" width="400" height="300">
     </div>
     {% endif %}
-<p>If you like {{anime['a_name']}} you may like these Animes</p>
+<p>If you like {{anime.a_name}} you may like these Animes</p>
 
     <div>
-        {% for anime in recommended %}
-          {% include 'views/item.html' %}
-        {% endfor %}
+
     </div>
 
   </div>

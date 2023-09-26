@@ -39,7 +39,7 @@ def load_animes_from_db():
                               )
         ANIME_DB = []
         for row in result.all():
-            ANIME_DB.append(row._asdict())
+            ANIME_DB.append(row)
         return ANIME_DB
 
 
@@ -53,7 +53,7 @@ def load_anime_from_db(id):
         if len(rows) == 0:
             return None
         else:
-            return rows[0]._asdict()
+            return rows[0]
 
 
 # Function to load our secret flask_key

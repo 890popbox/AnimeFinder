@@ -1,11 +1,11 @@
 <div class="col-3">
     <p
       style="color:rgb(120,120,120); margin-bottom:4px;">
-      {{anime['a_name']}}
+      {{anime.a_name}}
     </p>
-    {% if 'image' in anime %}
+    {% if anime.image %}
     <div>
-      <a href="/anime/{{anime['id']}}"><img src="{{anime['image']}}" alt="{{anime['id']}}" width="300" height="200"></a>
+      <a href="/anime/{{anime.id}}"><img src="{{anime.image}}" alt="{{anime.id}}" width="300" height="200"></a>
     </div>
     {% endif %}
 </div>

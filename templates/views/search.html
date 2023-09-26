@@ -32,19 +32,18 @@
           {% include 'views/item.html' %}
         {% endfor %}
       </div>
-{% for page_num in animes_pages.iter_pages(left_edge=3, right_edge=2,
-    left_current=1, right_current=1) %} {% if page_num %} {% if animes_pages.page ==
-    page_num %}
+
     <a
       class="btn btn-info mb-4"
-      >{{ page_num }}</a
-    >
-    {% else %}
+      href="{{ url_for('prev_url', page=page_num) }}"
+      >Previous</a>
+      >
+
     <a
       class="btn btn-outline-info mb-4"
-      >{{ page_num }}</a
+      href="{{ url_for('next_url', page=page_num) }}"
+      >Next</a>
     >
-    {% endif %} {% else %} ... {% endif %} {% endfor %}
 
     {% include 'views/partials/footer.html' %}
   </body>
