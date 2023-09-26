@@ -64,9 +64,7 @@ def anime_view(id):
     # Also checking for out of bounds, negative does not matter it just scans the database backwards anyway.
     # Hard coding this in at the moment, will change
     if int(id) < anime_count:
-        query = db.session.query(Animes)
-        item = query.get(int(id))
-        print(item)
+        item = Animes.query.get(int(id))
         return render_template('views/anime.html',
                                anime=item,
                                company_name='AnimeFinder')
@@ -95,18 +93,13 @@ def anime_search(phrase, page_num):
     page = request.args.get('page', page_num, type=int)
     query = Animes.query.filter(Animes.a_name.like('%' + phrase + '%')).paginate(page=int(page), per_page=12)
 
-    ANIME_DB = []
-    for row in query:
-        print(row)
-        ANIME_DB.append(row)
     # If nothing was found
-    if len(ANIME_DB) == 0:
+    if len(query.items) == 0:
         flash('Sorry, nothing was found. Try searching for something else')
         return redirect(url_for('anime_finder_home'))
         # Otherwise return what we found
     return render_template("views/search.html", form=form,
                            searched=phrase,
-                           animes=ANIME_DB,
                            animes_page=query)
 
 
