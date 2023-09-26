@@ -97,6 +97,6 @@ def anime_search():
 
 
 if __name__ == "__main__":
-    dev_context = ('local.crt', 'local.key')  # certificate and key files
-    prod_certs = ('cert.pem', 'key.pem')
+    # dev_context = ('local.crt', 'local.key')  # certificate and key files
+    # prod_certs = ('cert.pem', 'key.pem')
     app.run(host='127.0.0.1', debug=True)
