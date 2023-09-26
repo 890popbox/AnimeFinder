@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, flash, redirect, url_for, request
 from requests import post
 
-from database import load_animes_from_db, load_flask_key, SearchAnime
+from database import load_flask_key, SearchAnime
 from models import Animes, db
 
 # Animes in database
@@ -27,9 +27,6 @@ app.secret_key = load_flask_key()
 # Start up the database
 db.init_app(app)
 
-# Run it once and store all data globally so the application can use it
-ANIMELIST = load_animes_from_db()
-
 
 # Pass data to Navbar
 @app.context_processor
@@ -40,8 +37,9 @@ def base():
 
 @app.route("/")
 def anime_finder_home():
+    ANIMELIST = Animes.query.filter(Animes.score != "UNKNOWN").order_by(Animes.popularity.asc()).limit(12)
     return render_template('views/home.html',
-                           animes=ANIMELIST[0:12],
+                           animes=ANIMELIST,
                            company_name='AnimeFinder')
 
 
@@ -100,7 +98,8 @@ def validate_search():
 def anime_search(phrase, page_num):
     form = SearchAnime()
     page = request.args.get('page', page_num, type=int)
-    query = Animes.query.filter(Animes.a_name.like('%' + phrase + '%')).paginate(page=int(page), per_page=12)
+    query = Animes.query.filter(Animes.a_name.like('%' + phrase + '%')).filter(Animes.score != "UNKNOWN")\
+        .order_by(Animes.popularity.asc()).paginate(page=int(page), per_page=12)
 
     # If nothing was found
     if len(query.items) == 0:
