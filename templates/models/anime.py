@@ -1,6 +1,7 @@
 # This class belongs to the table animes, including all the columns we need here
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import declarative_base
+
 Base = declarative_base()
 
 

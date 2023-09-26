@@ -34,7 +34,8 @@ engine = create_engine(os.getenv('db_key'),
 # Function to load all anime from the database.
 def load_animes_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("select * from animes")
+        # Limiting to avoid too much reads in my database for development purposes
+        result = conn.execute(text("select * from animes limit 50;")
                               )
         ANIME_DB = []
         for row in result.all():
@@ -46,7 +47,7 @@ def load_animes_from_db():
 def load_anime_from_db(id):
     with engine.connect() as conn:
         result = conn.execute(
-            text(f"select * from animes where id = {id}")
+            text(f"select * from animes where id = {id} limit 50;")
         )
         rows = result.all()
         if len(rows) == 0:
@@ -70,7 +71,7 @@ class SearchAnime(FlaskForm):
 def search_anime_from_db(search):
     with engine.connect() as conn:
         result = conn.execute(
-            text(f"select * from animes where id = {id}")
+            text(f"select * from animes where id = {id}  limit 50;")
         )
 
 

@@ -1,13 +1,30 @@
-from flask import Flask, render_template, jsonify, flash, redirect, url_for, request
-from requests import post
-from sqlalchemy import sql
+import os
 
-from database import load_animes_from_db, load_flask_key, load_anime_from_db, SearchAnime, search_anime_from_db, engine, \
-    Session
+from flask import Flask, render_template, flash, redirect, url_for, request
+from requests import post
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, text
+
+from database import load_animes_from_db, load_flask_key, load_anime_from_db, SearchAnime, engine, Session
 from templates.models.anime import Animes
 
+# Create the Flask Application
 app = Flask(__name__)
+
+# Add a database and secret key
+# Adding ssl certs
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_key')
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "connect_args": {
+        "ssl": {
+            "ssl_ca": "/etc/ssl/cert.pem"
+        }
+    }
+}
 app.secret_key = load_flask_key()
+
+# Start up the database
+db = SQLAlchemy(app)
 
 # Run it once and store all data globally so the application can use it
 ANIMELIST = load_animes_from_db()
@@ -33,7 +50,7 @@ def about_view():
                            company_name='AnimeFinder')
 
 
-@app.route("/anime")
+@app.route("/all")
 def all_anime():
     return render_template('views/all.html',
                            animes=ANIMELIST[5:25],
@@ -59,8 +76,7 @@ def anime_view(id):
 @app.route("/search", methods=["POST"])
 def anime_search():
     form = SearchAnime()
-    session = Session()
-    posts = session.query(Animes)
+    posts = db.session.query(Animes)
     page = request.args.get('page', 1, type=int)
     if form.validate_on_submit():
         post.searched = form.searched.data
@@ -81,4 +97,6 @@ def anime_search():
 
 
 if __name__ == "__main__":
+    dev_context = ('local.crt', 'local.key')  # certificate and key files
+    prod_certs = ('cert.pem', 'key.pem')
     app.run(host='127.0.0.1', debug=True)
