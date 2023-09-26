@@ -75,35 +75,39 @@ def anime_view(id):
         return redirect(url_for('anime_finder_home'))
 
 
-# The search function
-@app.route("/search", methods=["POST", "GET"])
-def anime_search():
+# The initial search function to validate the search
+@app.route("/search/", methods=["GET", "POST"])
+def validate_search():
     form = SearchAnime()
-    page = request.args.get('page', 1, type=int)
     if form.validate_on_submit():
         post.searched = form.searched.data
-        query = Animes.query.filter(Animes.a_name.like('%' + post.searched + '%')).paginate(page=page, per_page=12)
+        phrase = post.searched
+        return redirect(url_for('anime_search', phrase=phrase, page_num=1))
+    else:
+        flash('Sorry, An error occurred during your search, please try again.')
+        return redirect(url_for('anime_finder_home'))
 
-        next_url = url_for('anime_search', page=query.next_num) \
-            if query.has_next else None
-        prev_url = url_for('anime_search', page=query.prev_num) \
-            if query.has_prev else None
 
-        ANIME_DB = []
-        for row in query:
-            print(row)
-            ANIME_DB.append(row)
-        # If nothing was found
-        if len(ANIME_DB) == 0:
-            flash('Sorry, nothing was found. Try searching for something else')
-            return redirect(url_for('anime_finder_home'))
+# The anime search function with defaults
+@app.route("/search/<phrase>/page=<page_num>", methods=["GET", "POST"])
+def anime_search(phrase, page_num):
+    form = SearchAnime()
+    page = request.args.get('page', page_num, type=int)
+    query = Animes.query.filter(Animes.a_name.like('%' + phrase + '%')).paginate(page=int(page), per_page=12)
+
+    ANIME_DB = []
+    for row in query:
+        print(row)
+        ANIME_DB.append(row)
+    # If nothing was found
+    if len(ANIME_DB) == 0:
+        flash('Sorry, nothing was found. Try searching for something else')
+        return redirect(url_for('anime_finder_home'))
         # Otherwise return what we found
-        return render_template("views/search.html", form=form,
-                               searched=post.searched,
-                               animes=ANIME_DB,
-                               animes_page=query,
-                               next_url=next_url,
-                               prev_url=prev_url)
+    return render_template("views/search.html", form=form,
+                           searched=phrase,
+                           animes=ANIME_DB,
+                           animes_page=query)
 
 
 if __name__ == "__main__":
