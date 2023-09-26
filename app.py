@@ -8,6 +8,9 @@ from sqlalchemy import create_engine, text
 from database import load_animes_from_db, load_flask_key, load_anime_from_db, SearchAnime, engine, Session
 from templates.models.anime import Animes
 
+# Animes in database
+anime_count = 24904
+
 # Create the Flask Application
 app = Flask(__name__)
 
@@ -62,7 +65,7 @@ def anime_view(id):
     # Searching directly for Anime by the Database ID to avoid too much reads.
     # Also checking for out of bounds, negative does not matter it just scans the database backwards anyway.
     # Hard coding this in at the moment, will change
-    if int(id) < 24904:
+    if int(id) < anime_count:
         query = db.session.query(Animes)
         item = query.get(int(id)).__dict__
         print(item)
