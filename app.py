@@ -6,9 +6,6 @@ from requests import post
 from database import load_flask_key, SearchAnime
 from models import Animes, db
 
-# Animes in database
-anime_count = 24904
-
 # Create the Flask Application
 app = Flask(__name__)
 
@@ -27,6 +24,15 @@ app.secret_key = load_flask_key()
 # Start up the database
 db.init_app(app)
 
+# Animes in database, This is hardcoded to avoid scanning the table each time for now.
+anime_count = 24904
+
+# Dynamic way to get the total items in a database, This runs once at the beginning of the application stateup
+'''
+with app.app_context():
+    anime_count = Animes.query.count()
+    print(anime_count)
+'''
 
 # Pass data to Navbar
 @app.context_processor
@@ -72,8 +78,11 @@ def anime_view(id):
     # Hard coding this in at the moment, will change
     if int(id) < anime_count:
         item = Animes.query.get(int(id))
+        query = Animes.query.filter(Animes.a_name.like('%' + item.a_name + '%')).filter(Animes.score != "UNKNOWN") \
+            .order_by(Animes.popularity.asc()).limit(4)
         return render_template('views/anime.html',
                                anime=item,
+                               recommend=query,
                                company_name='AnimeFinder')
     else:
         flash('Sorry, that id does not match an anime. Try searching for one above!')

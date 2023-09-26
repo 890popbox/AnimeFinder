@@ -39,8 +39,10 @@
     {% endif %}
 <p>If you like {{anime.a_name}} you may like these Animes</p>
 
-    <div>
-
+    <div class = "row border-bottom">
+        {% for anime in recommend %}
+          {% include 'views/recommend.html' %}
+        {% endfor %}
     </div>
 
   </div>
