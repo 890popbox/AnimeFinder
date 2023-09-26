@@ -1,11 +1,10 @@
 # This class belongs to the table animes, including all the columns we need here
 from sqlalchemy import Column, String, Integer
-from sqlalchemy.orm import declarative_base
+from flask_sqlalchemy import SQLAlchemy
 
-Base = declarative_base()
+db = SQLAlchemy()
 
-
-class Animes(Base):
+class Animes(db.Model):
     __tablename__ = 'animes'
     id = Column(Integer, primary_key=True, autoincrement=True)
     anime_id = Column(Integer, primary_key=False)

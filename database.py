@@ -12,7 +12,7 @@ import os
 # Reading the key from an environment file, could do this to a text file as well and not include it in repo.
 
 # Function to configure the project potentially
-from templates.models.anime import Animes
+from models import Animes
 
 
 def configure():

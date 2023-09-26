@@ -32,7 +32,19 @@
           {% include 'views/item.html' %}
         {% endfor %}
       </div>
-    </div>
+{% for page_num in animes_pages.iter_pages(left_edge=1, right_edge=1,
+    left_current=1, right_current=1) %} {% if page_num %} {% if animes_pages.page ==
+    page_num %}
+    <a
+      class="btn btn-info mb-4"
+      >{{ page_num }}</a
+    >
+    {% else %}
+    <a
+      class="btn btn-outline-info mb-4"
+      >{{ page_num }}</a
+    >
+    {% endif %} {% else %} ... {% endif %} {% endfor %}
 
     {% include 'views/partials/footer.html' %}
   </body>
