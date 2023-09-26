@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, flash, redirect, url_for, request
 from requests import post
 
-from database import load_animes_from_db, load_flask_key, load_anime_from_db, SearchAnime, engine, Session
+from database import load_animes_from_db, load_flask_key, SearchAnime
 from models import Animes, db
 
 # Animes in database
