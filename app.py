@@ -51,11 +51,20 @@ def about_view():
                            company_name='AnimeFinder')
 
 
+# The initial all route
 @app.route("/all")
 def all_anime():
+    return redirect(url_for('all_anime_page', page_num=1))
+
+
+# The all route page we are on
+@app.route("/all/page=<page_num>", methods=["GET", "POST"])
+def all_anime_page(page_num):
+    page = request.args.get('page', page_num, type=int)
+    query = Animes.query.order_by(Animes.a_name).paginate(page=int(page), per_page=16)
     return render_template('views/all.html',
-                           animes=ANIMELIST[5:25],
-                           company_name='AnimeFinder')
+                           company_name='AnimeFinder',
+                           animes_page=query)
 
 
 @app.route("/anime/<id>")
@@ -73,7 +82,7 @@ def anime_view(id):
         return redirect(url_for('anime_finder_home'))
 
 
-# The initial search function to validate the search
+# The initial search route to validate the search
 @app.route("/search/", methods=["GET", "POST"])
 def validate_search():
     form = SearchAnime()
