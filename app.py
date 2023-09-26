@@ -61,8 +61,10 @@ def all_anime():
 def anime_view(id):
     # Searching directly for Anime by the Database ID to avoid too much reads.
     # Also checking for out of bounds, negative does not matter it just scans the database backwards anyway.
-    if int(id) < len(ANIMELIST):
-        item = load_anime_from_db(int(id))
+    # Hard coding this in at the moment, will change
+    if int(id) < 24904:
+        query = db.session.query(Animes)
+        item = query.get(int(id)).__dict__
         print(item)
         return render_template('views/anime.html',
                                anime=item,

@@ -8,7 +8,7 @@ Base = declarative_base()
 class Animes(Base):
     __tablename__ = 'animes'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    anime_id = Column(Integer, primary_key=True)
+    anime_id = Column(Integer, primary_key=False)
     a_name = Column(String(150))
     english_name = Column(String(150))
     other_name = Column(String(150))
