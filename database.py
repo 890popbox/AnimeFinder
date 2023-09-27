@@ -8,6 +8,33 @@ from wtforms.validators import DataRequired
 from dotenv import load_dotenv
 import os
 
+# Data analysis process
+import numpy as np  # To perform linear algebra
+import pandas as pd  # For data processing
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+
+# Creating Anime dataframe to be used
+
+anime_df = pd.read_csv("data/anime-dataset-2023.csv")
+anime_df = anime_df[['anime_id', 'Name', 'English name', 'Genres', 'Studios']]
+anime_df['tags'] = (anime_df['Name'] + ' ') + (anime_df['English name'] + ' ') + anime_df['Genres'] + anime_df['Studios']
+
+
+# Recommending a few animes based off the one we are viewing, collect their IDs
+
+def recommend(anime):
+    cv = CountVectorizer(max_features=5000, stop_words='english')  # Create a vector to be used for cosine similarity
+
+    vector = cv.fit_transform(anime_df['tags']).toarray()  # Transform the tags to be used as a vector
+    similarity = cosine_similarity(vector)
+    index = anime_df[anime_df['Name'] == anime].index[0]
+    distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
+    ls = []
+    for i in distances[1:10]:
+        ls.append(anime_df.iloc[i[0]].anime_id)
+    return ls
 
 # Reading the key from an environment file, could do this to a text file as well and not include it in repo.
 

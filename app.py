@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, flash, redirect, url_for, request
 from requests import post
 
-from database import load_flask_key, SearchAnime
+from database import load_flask_key, SearchAnime, recommend
 from models import Animes, db
 
 # Create the Flask Application
@@ -77,12 +77,19 @@ def anime_view(id):
     # Also checking for out of bounds, negative does not matter it just scans the database backwards anyway.
     # Hard coding this in at the moment, will change
     if int(id) < anime_count:
-        item = Animes.query.get(int(id))
-        query = Animes.query.filter(Animes.a_name.like('%' + item.a_name + '%')).filter(Animes.score != "UNKNOWN") \
-            .order_by(Animes.popularity.asc()).limit(4)
+        item = db.session.get(Animes, int(id))
+
+        #recommended_id = recommend(item.a_name)
+        recommended_animes = []
+
+        '''
+        for item in recommended_id:
+            recommended_animes.append(Animes.query.get(int(id)))
+        '''
+
         return render_template('views/anime.html',
                                anime=item,
-                               recommend=query,
+                               recommend=recommended_animes,
                                company_name='AnimeFinder')
     else:
         flash('Sorry, that id does not match an anime. Try searching for one above!')
