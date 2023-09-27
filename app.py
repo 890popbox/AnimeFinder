@@ -80,8 +80,10 @@ def anime_view(id):
     # Also checking for out of bounds, negative does not matter it just scans the database backwards anyway.
     # Hard coding this in at the moment, will change
     if int(id) < anime_count:
+        # The current anime we are viewing
         item = db.session.get(Animes, int(id))
 
+        # A list to push all the anime ids that may relate
         recommended_animes = []
 
         for number in recommend(item.a_name):
