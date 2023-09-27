@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class Animes(db.Model):
     __tablename__ = 'animes'
     id = Column(Integer, primary_key=True, autoincrement=True)

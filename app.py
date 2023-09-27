@@ -1,8 +1,10 @@
 import os
 
+# Creating this website using the Flask framework
 from flask import Flask, render_template, flash, redirect, url_for, request
 from requests import post
 
+# Loading our database, models and keys to the main application
 from database import load_flask_key, SearchAnime, recommend
 from models import Animes, db
 
@@ -10,7 +12,7 @@ from models import Animes, db
 app = Flask(__name__)
 
 # Add a database and secret key
-# Adding ssl certs
+# Adding ssl certs so our database can make a secure connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_key')
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "connect_args": {
@@ -21,20 +23,21 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 }
 app.secret_key = load_flask_key()
 
-# Start up the database
+# Start up the database creating a session with our application
 db.init_app(app)
 
-# Animes in database, This is hardcoded to avoid scanning the table each time for now.
+# Animes in database, This is hardcoded for now to avoid scanning the table each time for now.
 anime_count = 24904
 
-# Dynamic way to get the total items in a database, This runs once at the beginning of the application stateup
+# Dynamic way to get the total items in a database, This runs once at the beginning of the application startup
 '''
 with app.app_context():
     anime_count = Animes.query.count()
     print(anime_count)
 '''
 
-# Pass data to Navbar
+
+# Pass data to Navbar to keep the search forms context in every page of the app
 @app.context_processor
 def base():
     form = SearchAnime()
@@ -79,13 +82,10 @@ def anime_view(id):
     if int(id) < anime_count:
         item = db.session.get(Animes, int(id))
 
-        #recommended_id = recommend(item.a_name)
         recommended_animes = []
 
-        '''
-        for item in recommended_id:
-            recommended_animes.append(Animes.query.get(int(id)))
-        '''
+        for number in recommend(item.a_name):
+            recommended_animes.append(db.session.get(Animes, int(number)))
 
         return render_template('views/anime.html',
                                anime=item,
@@ -114,7 +114,7 @@ def validate_search():
 def anime_search(phrase, page_num):
     form = SearchAnime()
     page = request.args.get('page', page_num, type=int)
-    query = Animes.query.filter(Animes.a_name.like('%' + phrase + '%')).filter(Animes.score != "UNKNOWN")\
+    query = Animes.query.filter(Animes.a_name.like('%' + phrase + '%')).filter(Animes.score != "UNKNOWN") \
         .order_by(Animes.popularity.asc()).paginate(page=int(page), per_page=12)
 
     # If nothing was found
