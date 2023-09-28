@@ -1,3 +1,4 @@
+import pandas as pd
 from sqlalchemy import create_engine, text
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
@@ -9,12 +10,28 @@ import os
 # We are dealing with the CSV file directly and jupyter notebook to easily create and use this model
 # In an actual system we will have to actively store information to a live model and pull from a database/userbase.
 import pickle
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import sigmoid_kernel
 
 # Load the content-based filtering models I have made
 a_model = pickle.load(open('data/anime_list.pkl', 'rb'))
-similarity = pickle.load(open('data/similarity.pkl', 'rb'))
+tfv_matrix = pickle.load(open('data/matrix.pkl', 'rb'))
+# similarity = pickle.load(open('data/similarity.pkl', 'rb'))
 
+# Compute the sigmoid kernel
+sig = sigmoid_kernel(tfv_matrix, tfv_matrix)
 
+# getting the indices of anime title
+indices = pd.Series(a_model.index, index=a_model['Name']).drop_duplicates()
+
+'''
+cv = CountVectorizer(max_features=5000, stop_words='english')  # Create a vector to be used for cosine similarity
+vector = cv.fit_transform(a_model['tags']).toarray()  # Transform the tags to be used as a vector
+similarity = cosine_similarity(vector)
+'''
+
+'''
 # Recommending a few animes based off the one we are viewing, collect their IDs
 def recommend(anime):
     # In this example we must be viewing a valid anime name that exists in our database.
@@ -27,6 +44,26 @@ def recommend(anime):
         # print(a_model.iloc[i[0]].Name)
         ls.append(i[0] + 1)  # The first column (0) is not relevant to our search, This is the title/name/etc.
     return ls
+'''
+
+
+def recommend(title, sig=sig):
+    # Get the index corresponding to original_title
+    idx = indices[title]
+
+    # Get the pairwsie similarity scores
+    sig_scores = list(enumerate(sig[idx]))
+
+    # Sort the movies
+    sig_scores = sorted(sig_scores, key=lambda x: x[1], reverse=True)
+
+    # Scores of the 10 most similar movies
+    sig_scores = sig_scores[1:11]
+
+    # Anime indices, plus one because the ID in database starts at one not zero.
+    anime_indices = [(i[0]+1) for i in sig_scores]
+
+    return anime_indices[0:4]
 
 
 # Reading the key from an environment file, could do this to a text file as well and not include it in repo.
