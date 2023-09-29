@@ -12,8 +12,8 @@ from models import Animes, db
 app = Flask(__name__)
 
 # Read-only key
-user_key = 'mysql+pymysql://ba23nfpaf8lrfjq8znl1:pscale_pw_hfzFyhlK9fUyK7mzXf4XMsxLbxOA9C4GPtV6WLuVV80@aws.connect' \
-           '.psdb.cloud/animedatabase?charset=utf8mb4'
+with open("user_key.txt", "r") as f:
+    user_key = f.readline()
 
 # Add a database and secret key
 # Adding ssl certs so our database can make a secure connection
