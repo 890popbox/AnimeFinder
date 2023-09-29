@@ -11,9 +11,13 @@ from models import Animes, db
 # Create the Flask Application
 app = Flask(__name__)
 
+# Read-only key
+user_key = 'mysql+pymysql://ba23nfpaf8lrfjq8znl1:pscale_pw_hfzFyhlK9fUyK7mzXf4XMsxLbxOA9C4GPtV6WLuVV80@aws.connect' \
+           '.psdb.cloud/animedatabase?charset=utf8mb4'
+
 # Add a database and secret key
 # Adding ssl certs so our database can make a secure connection
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_key')
+app.config['SQLALCHEMY_DATABASE_URI'] = user_key  # os.getenv('db_key')
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "connect_args": {
         "ssl": {
@@ -21,7 +25,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         }
     }
 }
-app.secret_key = load_flask_key()
+app.secret_key = 'devappkeyhere'  # load_flask_key()
 
 # Start up the database creating a session with our application
 db.init_app(app)
