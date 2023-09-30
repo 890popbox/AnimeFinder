@@ -1,11 +1,9 @@
-import os
-
 # Creating this website using the Flask framework
 from flask import Flask, render_template, flash, redirect, url_for, request
 from requests import post
 
 # Loading our database, models and keys to the main application
-from database import load_flask_key, SearchAnime, recommend
+from database import SearchAnime, recommend
 from models import Animes, db
 
 # Create the Flask Application

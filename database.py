@@ -1,4 +1,3 @@
-import pandas as pd
 from sqlalchemy import create_engine
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
@@ -11,65 +10,24 @@ import os
 # In an actual system we will have to actively store information to a live model and pull from a database/userbase.
 import pickle
 
-# Load the content-based filtering models I have made, opening the csv of the anime file could work
+
 anime_data = pickle.load(open('data/anime_list.pkl', 'rb'))
-tfv_matrix = pickle.load(open('data/matrix.pkl', 'rb'))
+similarity = pickle.load(open('data/similarity.pkl', 'rb'))
 
-from sklearn.metrics.pairwise import sigmoid_kernel
-
-# Compute the sigmoid kernel
-sig = sigmoid_kernel(tfv_matrix, tfv_matrix)
-
-# The indices of anime title
-indices = pd.Series(anime_data.index, index=anime_data['Name']).drop_duplicates()
-
-
-def recommend(title, sig=sig):
-    # Get the index corresponding to original_title
-    idx = indices[title]
-
-    # Get the pairwsie similarity scores
-    sig_scores = list(enumerate(sig[idx]))
-
-    # Sort the movies
-    sig_scores = sorted(sig_scores, key=lambda x: x[1], reverse=True)
-
-    # Scores of the 10 most similar movies
-    sig_scores = sig_scores[1:5]
-
-    # Anime indices, plus one because of the csv file
-    anime_indices = [(i[0] + 1) for i in sig_scores]
-
-    return anime_indices
-
-
-# Nearest Neighbour algorithm
-'''
-# Creating all the keywords to look for
-anime_features = pd.concat([animes['anime_id'], animes['Name'], animes['Genres'].str.get_dummies(sep=',')], axis=1)
-anime_features = anime_features.loc[:, "Adventure":].copy()
-
-# Using this for NearestNeighbor algorithm.
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.neighbors import NearestNeighbors
-
-# Need to transform the models so they can be used properly
-anime_feat_scaler = MinMaxScaler()
-anime_features_scaled = anime_feat_scaler.fit_transform(anime_features)
-knn2 = NearestNeighbors(n_neighbors=11, algorithm='brute', metric='cosine').fit(anime_features_scaled)
-all_anime_names = list(animes['Name'])
 
 # Recommending a few animes based off the one we are viewing, collect their IDs
+# Using cosine similarity to decide which animes are related to each other the best
 def recommend(anime):
-    # Create a list to collect these IDs and perform NearestNeighbour algorithm
-    similar_anime_id = []
-    query_index = all_anime_names.index(anime)
-    distances1, indices1 = knn2.kneighbors(anime_features_scaled[query_index].reshape(1, -1), n_neighbors=11)
-    # Collect four IDs of the most similar anime to the given parameter
-    for i in range(1, 5):
-        similar_anime_id.append(indices1.flatten()[i] + 1)
-    return similar_anime_id
-'''
+    # In this example we must be viewing a valid anime name that exists in our database.
+    index = anime_data[anime_data['Name'] == anime].index[0]
+    distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
+    # Holding the IDs of a few animes with the best cosine similarity.
+    # (This means they will be closely related. (See above
+    ls = []
+    for i in distances[1:5]:
+        # print(a_model.iloc[i[0]].Name)
+        ls.append(i[0] + 1)  # The first column (0) is not relevant to our search, This is the title/name/etc.
+    return ls
 
 
 # Reading the key from an environment file, could do this to a text file as well and not include it in repo.
@@ -101,9 +59,11 @@ class SearchAnime(FlaskForm):
     searched = StringField("searched", validators=[DataRequired()])
     submit = SubmitField("submit")
 
-# The model I trained uses only four tags to perform cosine similarity
-# (Name, English name, Genre, and Studio) Reason: The names could be slightly different (This helps avoid
-# shows that just have common names, leaning the model more towards something relevant) The genre and studio,
-# I feel if you like the show you may like shows within that genre or from the same studio. Other keywords and tags
-# could potentially be introduced in future models depending on if a user-base was introduced.
-# This is simple and leans towards relevant results.
+# The model I trained uses only two tags to perform cosine similarity (Name, Genre, and Studio)
+# --- Explanation below --
+# The name could be included as well to lead the model towards deciding on the next seasons of the shows.
+# The genre is pretty straight forward as it categorizes the show,
+# An action you would expect some fighting or intense movement scenes. A comedy you may expect to laugh, and so on.
+# I feel also if you like the show you may like shows within that genre or from the same studio.
+# This is simple and leans towards relevant results. Other keywords and tags could potentially be introduced in future
+# models depending on if a user-base was introduced.
